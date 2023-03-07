@@ -1,0 +1,22 @@
+{
+    "name": "pdfDownLoader",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "Chrome Extension for Download PDF in the site",
+    "background": {
+        "scripts": ["src/background.js"]
+    },
+    "browser_action": {
+        "default_popup": "/data/controller.html"
+    },
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*"],
+        "js": [
+            "src/content.js"
+        ]
+    }],
+    "permissions": [
+        "tabs", "https://*/*", "contextMenus"
+    ],
+    "content_security_policy": "script-src-elem 'self' 'unsafe-inline' https://code.jquery.com/jquery-3.6.0.min.js;"
+}
