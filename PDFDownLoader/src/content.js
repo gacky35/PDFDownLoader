@@ -15,11 +15,34 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             }
             sendResponse({'data': pdfs});
             break;
+        case 'getImageLink':
+            let imgs = document.getElementsByTagName('img');
+            let images = [];
+            for (img of imgs) {
+                link = img.src;
+                if (link && link.endsWith('jpg')) {
+                    images.push({'title': img.id, 'link': link});
+                }
+            }
+            sendResponse({'data': images});
+            break;
         case 'downloadPDF':
             selectOption = request.data;
             for (option of selectOption) {
                 let anchor = document.createElement('a');
                 anchor.download = option.title + '.pdf';
+                document.body.appendChild(anchor);
+                anchor.href = option.link;
+                anchor.click();
+                document.body.removeChild(anchor);
+                sleep(1500);
+            }
+            break;
+        case 'downloadImage':
+            selectOption = request.data;
+            for (option of selectOption) {
+                let anchor = document.createElement('a');
+                anchor.download = option.title + '.jpg';
                 document.body.appendChild(anchor);
                 anchor.href = option.link;
                 anchor.click();
