@@ -19,9 +19,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             let imgs = document.getElementsByTagName('img');
             let images = [];
             for (img of imgs) {
-                link = img.src;
+                link = img.getAttribute('src');
                 if (link && link.endsWith('jpg')) {
                     images.push({'title': img.id, 'link': link});
+                }
+            }
+            let iframes = document.getElementsByTagName('iframe');
+            let iframeDoc = iframes[0].contentDocument;
+            let iframeImages = iframeDoc.getElementsByTagName('img');
+            for (iframeImage of iframeImages) {
+                link = iframeImage.getAttribute('src');
+                if (link && link.endsWith('jpg')) {
+                    images.push({'title': iframeImage.getAttribute('id'), 'link': link});
                 }
             }
             sendResponse({'data': images});
@@ -44,7 +53,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 let anchor = document.createElement('a');
                 anchor.download = option.title + '.jpg';
                 document.body.appendChild(anchor);
-                anchor.href = option.link;
+                anchor.href = location.origin + '/js_viewer/' + option.link;
                 anchor.click();
                 document.body.removeChild(anchor);
                 sleep(1500);
